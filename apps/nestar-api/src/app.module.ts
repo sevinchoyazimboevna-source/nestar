@@ -17,9 +17,9 @@ import { DatabaseModule } from './database/database.module';
       uploads: false,// faylarni yuklashni ochiradi
       autoSchemaFile: true,
     }), ComponentsModule, 
-        DatabaseModule,
+        DatabaseModule, 
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
 })
-export class AppModule {}
+export class AppModule {} //modul decorator

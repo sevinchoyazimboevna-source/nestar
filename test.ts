@@ -1,0 +1,9 @@
+// nest js bu toliq modullar tizmida ishlidigan framework
+
+// 1 DependencyInjection
+// 2MVC
+// 3AOP
+
+// start:dev bu nestar-api ni ishga tushuradi
+// start:dev:batch monoreponi ishga tusguradi
+//APP MODULE - ingredient bu 
