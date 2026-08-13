@@ -12,3 +12,5 @@ import { BoardArticleModule } from './board-article/board-article.module';
   imports: [MemberModule, PropertyModule, AuthModule, CommentModule, LikeModule, ViewModule, FollowModule, BoardArticleModule]
 })
 export class ComponentsModule {}
+
+//components module bu prosta hamma modulni jamlab berish uchun ishlatiladi

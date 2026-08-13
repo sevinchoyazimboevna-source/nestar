@@ -7,3 +7,5 @@
 // start:dev bu nestar-api ni ishga tushuradi
 // start:dev:batch monoreponi ishga tusguradi
 //APP MODULE - ingredient bu 
+
+// nest g service  components/member --no-spec spec fillerni hosil qilib bermaydi
