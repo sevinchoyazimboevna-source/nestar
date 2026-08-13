@@ -1,17 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import MemberSchema from './../../../../schemas/Member.model';
 import { Model } from 'mongoose';
+import { Member } from '../../libs/dto/member/member';
+import { MemberInput } from '../../libs/dto/member/member.input';
 
 //ASOSY BUSINESS MANTIQ shu yerda yoziladi
 
 @Injectable()
 export class MemberService {
 
-    constructor(@InjectModel("Member") private readonly memberModel: Model<null>) {}
+    constructor(@InjectModel("Member") private readonly memberModel: Model<Member>) {}
 
-    public async signup(): Promise<string> {
-        return "signup executed!";
+    public async signup(input: MemberInput): Promise<Member> {
+        //TODO HASH PASSWORD
+        try {
+        const result = await this.memberModel.create(input);
+
+        //TODO AUTH VIA TOKEN
+        return result;
+        } catch(err) {
+        console.log("Error, service.model", err);
+        throw new BadRequestException(err);
+        }
     }
 
     public async login(): Promise<string> {

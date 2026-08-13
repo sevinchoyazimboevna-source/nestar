@@ -1,7 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MemberService } from './member.service';
-import { UsePipes, ValidationPipe } from '@nestjs/common';
+import { InternalServerErrorException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
+import { Member } from '../../libs/dto/member/member';
 
 //BOSHQARUVCHI MANTIQ YOZILADI kop mantiq yozilmaydi 
 
@@ -9,19 +10,30 @@ import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 export class MemberResolver {
     constructor(private readonly memberService: MemberService) {}
 
-        @Mutation(() => String)
+        @Mutation(() => Member)
         @UsePipes(ValidationPipe) //kirib kelayotgan dto mis taalabga javob bermasa pastagilarni kiritishni hojati yok
-        public async signup(@Args("input") input: MemberInput): Promise<string> { //dto si memberinput
+        public async signup(@Args("input") input: MemberInput): Promise<Member> { //dto si memberinput
+            try {
             console.log("Mutation: signup");
-            console.log("input", input)
-            return this.memberService.signup();
+            console.log("input", input);
+            return this.memberService.signup(input);
+            } catch(err) {
+                console.log("Error, signup", err);
+                throw new InternalServerErrorException(err);
+            }
+            
         }
 
         @Mutation(() => String)
         @UsePipes(ValidationPipe)
         public async login(@Args("input") input: LoginInput): Promise<string> {
+            try {
             console.log("Mutation: login");
             return this.memberService.login();
+            } catch(err) {
+                console.log("Error, login", err);
+                throw new InternalServerErrorException(err);
+            }
         }
 
         @Mutation(() => String)
