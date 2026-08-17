@@ -23,7 +23,7 @@ export class MemberService {
         return result;
         } catch(err) {
         console.log("Error, service.model", err);
-        throw new BadRequestException(err);
+        throw new BadRequestException(Message.USED_NICK_OR_PHONE);
         }
     }
 
