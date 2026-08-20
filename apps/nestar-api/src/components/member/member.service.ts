@@ -48,7 +48,7 @@ export class MemberService {
         }
 
 
-        const isMatch = await this.authService.comparePassowrds(input.memberPassword, response.memberPassword);
+        const isMatch = await this.authService.comparePasswords(input.memberPassword, response.memberPassword);
         if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
 
         response.accessToken = await this.authService.createToken(response);

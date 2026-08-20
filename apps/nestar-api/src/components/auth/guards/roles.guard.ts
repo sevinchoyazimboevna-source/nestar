@@ -27,12 +27,13 @@ export class RolesGuard implements CanActivate {
 				hasPermission: boolean = hasRole();
 
 			if (!authMember || !hasPermission) throw new ForbiddenException(Message.ONLY_SPECIFIC_ROLES_ALLOWED);
-
+	
 			console.log('memberNick[roles] =>', authMember.memberNick);
 			request.body.authMember = authMember;
 			return true;
 		}
-
+	
 		// description => http, rpc, gprs and etc are ignored
+		return false;
 	}
 }

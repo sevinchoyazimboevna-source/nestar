@@ -1,80 +1,88 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import type {ObjectId} from 'mongoose';
+import type { ObjectId } from 'mongoose'
 import { MemberAuthType, MemberStatus, MemberType } from "../../enums/member.enum";
+
 
 @ObjectType()
 export class Member {
+
     @Field(() => String)
-    _id: ObjectId;
+    _id!: ObjectId;
+
 
     @Field(() => MemberType)
-    memberType: MemberType;
+    memberType!: MemberType;
 
     @Field(() => MemberStatus)
-    memberStatus: MemberStatus;
+    memberStatus!: MemberStatus;
 
     @Field(() => MemberAuthType)
-    memberAuthType: MemberAuthType;
+    memberAuthType!: MemberAuthType;
 
     @Field(() => String)
-    memberPhone: string;
+    memberPhone!: string;
 
     @Field(() => String)
-    memberNick: string;
+    memberNick!: string;
 
-    memberPassword?: string;
+    memberPassword?: string
 
-    @Field(() => String, {nullable: true})
+    @Field(() => String, { nullable: true })
     memberFullName?: string;
 
     @Field(() => String)
-    memberImage: string;
+    memberImage!: string;
 
-    @Field(() => String, {nullable: true})
+    @Field(() => String, { nullable: true })
     memberAddress?: string;
 
-    @Field(() => String, {nullable: true})
+    @Field(() => String, { nullable: true })
     memberDesc?: string;
 
-    @Field(() => Int)
-    memberArticles: number;
 
     @Field(() => Int)
-    memberFollowers: number;
+    memberProperties!: number;
 
     @Field(() => Int)
-    memberFollowings: number;
+    memberArticles!: number;
 
     @Field(() => Int)
-    memberPoints: number;
+    memberFollowers!: number;
 
     @Field(() => Int)
-    memberLikes: number;
+    memberFollowings!: number;
 
     @Field(() => Int)
-    memberViews: number;
+    memberPoints!: number;
 
     @Field(() => Int)
-    memberComments: number;
+    memberLikes!: number;
 
     @Field(() => Int)
-    memberRanks: number;
+    memberViews!: number;
 
     @Field(() => Int)
-    memberWarnings: number;
+    memberComments!: number;
 
     @Field(() => Int)
-    memberBlocks: number;
+    memberRank!: number;
 
-    @Field(() => Date, {nullable: true})
+    @Field(() => Int)
+    memberWarnings!: number;
+
+    @Field(() => Int)
+    memberBlocks!: number;
+
+    @Field(() => Date, { nullable: true })
     deletedAt?: Date;
 
-    @Field(() => Date)
+    @Field(() => Date,)
     createdAt?: Date;
 
-    @Field(() => Date)
+    @Field(() => Date,)
     updatedAt?: Date;
-
-    @Field(() => String, {nullable: true})
+    @Field(() => String, { nullable: true })
     accessToken?: string;
+
+
 }
