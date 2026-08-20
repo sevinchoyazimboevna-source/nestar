@@ -1,28 +1,30 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import MemberSchema from './../../../../schemas/Member.model';
 import { Model } from 'mongoose';
 import { Member } from '../../libs/dto/member/member';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { MemberStatus } from '../../libs/enums/member.enum';
 import { Message } from '../../libs/enums/common.enum';
+import { AuthService } from '../auth/auth.service';
 
 //ASOSY BUSINESS MANTIQ shu yerda yoziladi
 
 @Injectable()
 export class MemberService {
 
-    constructor(@InjectModel("Member") private readonly memberModel: Model<Member>) {}
+    constructor(@InjectModel("Member") private readonly memberModel: Model<Member>,
+    private authService: AuthService,
+    ) {}
 
     public async signup(input: MemberInput): Promise<Member> {
-        //TODO HASH PASSWORD
+        input.memberPassword = await this.authService.hashPassword(input.memberPassword);
         try {
         const result = await this.memberModel.create(input);
 
         //TODO AUTH VIA TOKEN
         return result;
         } catch(err) {
-        console.log("Error, service.model", err);
+        console.log("Error, service.model", err.message);
         throw new BadRequestException(Message.USED_NICK_OR_PHONE);
         }
     }
@@ -40,8 +42,12 @@ export class MemberService {
             throw new InternalServerErrorException(Message.BLOCKED_USER);
         }
 
-        //TODO: COMPARE PASSWORD
-        const isMatch = memberPassword === response.memberPassword;
+        if (!response.memberPassword) {
+        throw new InternalServerErrorException(Message.WRONG_PASSWORD);
+        }
+
+
+        const isMatch = await this.authService.comparePassowrds(input.memberPassword, response.memberPassword);
         if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD)
 
         return response;

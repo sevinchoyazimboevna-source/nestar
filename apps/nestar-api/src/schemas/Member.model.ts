@@ -8,13 +8,13 @@ const MemberSchema = new Schema({
         default: MemberType.USER,
     },
 
-    MemberStatus: {
+    memberStatus: {
         type: String,
         enum: MemberStatus,
         default: MemberStatus.ACTIVE,
     },
 
-    MemberAuthType: {
+    memberAuthType: {
         type: String,
         enum: MemberAuthType,
         default: MemberAuthType.PHONE,
@@ -110,7 +110,7 @@ const MemberSchema = new Schema({
         default: 0,
     },
 
-    deletedAT: {
+    deletedAt: {
         type: Date,
     },
 },
