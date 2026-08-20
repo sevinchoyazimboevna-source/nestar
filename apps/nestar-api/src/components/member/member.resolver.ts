@@ -5,9 +5,9 @@ import { Member } from '../../libs/dto/member/member';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
-import { ObjectId } from 'mongodb';
-import { MemberType } from '../../libs/enums/member.enum';
+import type { ObjectId } from 'mongoose';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { MemberType } from '../../libs/enums/member.enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Resolver()
@@ -25,28 +25,30 @@ export class MemberResolver {
 		console.log('Mutation: login');
 		return this.memberService.login(input);
 	}
-
-
+	// Authenticated
 	@UseGuards(AuthGuard)
-    @Mutation(() => String)
+	@Mutation(() => String)
 	public async updateMember(@AuthMember('_id') memberId: ObjectId): Promise<string> {
 		console.log('Mutation: updateMember');
+		console.log(memberId);
 		return this.memberService.updateMember();
 	}
 
+	@Roles(MemberType.USER, MemberType.AGENT)
 	@UseGuards(RolesGuard)
-    @Query(() => String)
-	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
-		console.log('Mutation: checkAuth');
-		return `hi ${memberNick}`;
+	@Query(() => String)
+	public async checkAuthRoles(@AuthMember() authMember: Member): Promise<string> {
+		console.log('Query: checkAuthRoles');
+
+		return `Hi ${authMember.memberNick}, you are ${authMember.memberType} (memberId: ${authMember._id})`;
 	}
 
-	@Roles(MemberType.ADMIN, MemberType.AGENT)
-	@UseGuards(RolesGuard)
-    @Query(() => String)
-	public async checkAuthRole(@AuthMember() authMember: Member): Promise<string> {
-		console.log('Query: checkAuthRoles');
-		return `hi ${authMember.memberNick}, you are ${authMember.memberType} (memberId: ${authMember._id}) `;
+	@UseGuards(AuthGuard)
+	@Query(() => String)
+	public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
+		console.log('Query: checkAuth');
+		console.log('memberNick:', memberNick);
+		return `Hi ${memberNick}`;
 	}
 
 	@Query(() => String)
@@ -55,21 +57,20 @@ export class MemberResolver {
 		return this.memberService.getMember();
 	}
 
-	//ADMIN
+	/**ADMIN */
+
+	// Autoration: ADMIN
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Query(() => String)
-	public async getAllMembersByAdmin(@AuthMember() authMember: Member): Promise<string> {
-		console.log("AuthMember.memberType", authMember.memberType);
+	@Mutation(() => String)
+	public async getAllMembersByAdmin(): Promise<string> {
 		return this.memberService.getAllMembersByAdmin();
 	}
 
-	//authorization
-	@Query(() => String)
-	public async updateMembersByAdmin(): Promise<string> {
-		console.log("Mutation updateMemberByAdmin")
-
+	// Authenticated
+	@Mutation(() => String)
+	public async updateMemberByAdmin(): Promise<string> {
+		console.log('Mutation: updateMemberByAdmin');
 		return this.memberService.updateMembersByAdmin();
 	}
-
 }

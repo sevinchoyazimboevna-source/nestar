@@ -14,6 +14,7 @@ export class AuthGuard implements CanActivate {
 
 			const bearerToken = request.headers.authorization;
 			if (!bearerToken) throw new BadRequestException(Message.TOKEN_NOT_EXIST);
+			console.log('bearerToken =>', bearerToken);
 
 			const token = bearerToken.split(' ')[1],
 				authMember = await this.authService.verifyToken(token);
@@ -24,8 +25,8 @@ export class AuthGuard implements CanActivate {
 
 			return true;
 		}
+		return true;
 
 		// description => http, rpc, gprs and etc are ignored
-		return false;
 	}
 }
