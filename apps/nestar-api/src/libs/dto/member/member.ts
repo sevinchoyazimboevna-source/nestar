@@ -7,7 +7,7 @@ import { MemberAuthType, MemberStatus, MemberType } from "../../enums/member.enu
 export class Member {
 
     @Field(() => String)
-    _id!: ObjectId;
+    _id: ObjectId;
 
 
     @Field(() => MemberType)
