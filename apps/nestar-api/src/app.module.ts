@@ -15,7 +15,7 @@ import { T } from './libs/types/common';
     GraphQLModule.forRoot({ // bu Graphql ni ishga tushuradi va schemani avtomatik yaratadi
       driver: ApolloDriver, 
       playground: true, 
-      uploads: false,// faylarni yuklashni ochiradi
+      uploads: true,
       autoSchemaFile: true,
       formatError: (error: T) => {
         console.log("error", error);
