@@ -136,7 +136,7 @@ export class MemberResolver {
         const uploadedImages: string[] = [];
         const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<void> => {
             try {
-                const { filename, mimetype, encoding, createReadStream } = await img;
+                const { filename, mimetype, createReadStream } = await img;
 
                 const validMime = validMimeTypes.includes(mimetype);
                 if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
