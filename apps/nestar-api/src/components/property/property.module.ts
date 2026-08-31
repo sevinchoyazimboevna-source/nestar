@@ -15,10 +15,11 @@ import { MemberModule } from '../member/member.module';
 				schema: PropertySchema,
 			},
 		]),
-    AuthModule,
+		AuthModule,
 		ViewModule,
 		MemberModule,
 	],
 	providers: [PropertyResolver, PropertyService],
+	exports: [PropertyService],
 })
 export class PropertyModule {}
