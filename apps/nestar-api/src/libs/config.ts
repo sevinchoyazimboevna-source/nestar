@@ -16,6 +16,7 @@ export const availablePropertySort = [
 	
 ];
 
+export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 
 // IMAGE CONFIGURATION
 
