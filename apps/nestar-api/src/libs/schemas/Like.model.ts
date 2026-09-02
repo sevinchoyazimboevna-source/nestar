@@ -1,5 +1,6 @@
 import { Schema } from 'mongoose';
-import { ViewGroup } from '../libs/enums/view.enum';
+import { ViewGroup } from '../enums/view.enum';
+
 
 const LikeSchema = new Schema(
 	{
