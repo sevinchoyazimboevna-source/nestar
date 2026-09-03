@@ -7,19 +7,17 @@ export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'm
 
 export const availableOptions = ['propertyBarter', 'propertyRent'];
 export const availablePropertySort = [
-	"createdAt",
-	"updatedAt",
-	"propertyLikes",
-	"propertyViews",
-	"propertyRank",
-	"propertyPrice",
-	
+	'createdAt',
+	'updatedAt',
+	'propertyLikes',
+	'propertyViews',
+	'propertyRank',
+	'propertyPrice',
 ];
 
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
-
 
 // IMAGE CONFIGURATION
 
@@ -29,7 +27,6 @@ export const getSerialForImage = (filename: string) => {
 	return uuidv4() + ext;
 };
 
-
 export const shapeIntoMongoObjectId = (target: any) => {
 	return typeof target === 'string' ? new ObjectId(target) : target;
 };
@@ -37,8 +34,26 @@ export const shapeIntoMongoObjectId = (target: any) => {
 export const lookupMember = {
 	$lookup: {
 		from: 'members',
-		localField: "memberId",
-		foreignField: "_id",
-		as: "memberData",
+		localField: 'memberId',
+		foreignField: '_id',
+		as: 'memberData',
+	},
+};
+
+export const lookupFollowingData = {
+	$lookup: {
+		from: 'members',
+		localField: 'followingId',
+		foreignField: '_id',
+		as: 'followingData',
+	},
+};
+
+export const lookupFollowerData = {
+	$lookup: {
+		from: 'members',
+		localField: 'followerId',
+		foreignField: '_id',
+		as: 'followerData',
 	},
 };
