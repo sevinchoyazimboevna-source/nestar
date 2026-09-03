@@ -16,9 +16,9 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import { StatisticModifier, T } from '../../libs/types/common';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { LikeGroup } from '../../libs/enums/like.enum';
+import { LikeService } from '../like/like.service';
 import { LikeInput } from '../../libs/dto/like/like.input';
-import { LikeService } from './../like/like.service';
+import { LikeGroup } from '../../libs/enums/like.enum';
 @Injectable()
 export class BoardArticleService {
 	constructor(
@@ -75,7 +75,9 @@ export class BoardArticleService {
 				targetBoardArticle.articleViews++;
 			}
 
-			// meLiked
+			//LIKED
+			const likeInput = { memberId: memberId, likeRefId: articleId, likeGroup: LikeGroup.ARTICLE };
+			targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput);
 		}
 
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);

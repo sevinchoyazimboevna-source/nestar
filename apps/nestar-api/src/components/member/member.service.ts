@@ -15,12 +15,12 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import { LikeInput } from '../../libs/dto/like/like.input';
 import { LikeGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
-
-
+import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
 @Injectable()
 export class MemberService {
 	constructor(
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
+		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 		private authService: AuthService,
 		private viewService: ViewService,
 		private likeService: LikeService,
@@ -59,8 +59,6 @@ export class MemberService {
 			const isMatch = await this.authService.comparePasswords(input.memberPassword, result.memberPassword);
 
 			if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
-
-			delete result.memberPassword;
 
 			result.accessToken = await this.authService.createToken(result);
 
@@ -109,9 +107,26 @@ export class MemberService {
 				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
 				targetMember.memberViews++;
 			}
+			//LIKED
+			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
+			targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+
+			//Follow
+			targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
 		}
 
 		return targetMember;
+	}
+
+	private async checkSubscription(followerId: ObjectId, followingId: ObjectId): Promise<MeFollowed[]> {
+		const result = await this.followModel
+			.findOne({
+				followerId: followerId,
+				followingId: followingId,
+			})
+			.exec();
+
+		return result ? [{ followerId: followerId, followingId: followingId, myFollowing: true }] : [];
 	}
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
@@ -139,9 +154,7 @@ export class MemberService {
 	}
 
 	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
-		const target: Member | null = await this.memberModel
-			.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE })
-			.exec();
+		const target = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		const input: LikeInput = {
@@ -150,13 +163,15 @@ export class MemberService {
 			likeGroup: LikeGroup.MEMBER,
 		};
 
-		//LIKE TOGGLE VIE LIKE MODULES
-
 		const modifier: number = await this.likeService.toggleLike(input);
-		const result = await this.memberStatsEditor({ _id: likeRefId, targetKey: 'memberLikes', modifier: modifier });
+
+		const result = await this.memberStatsEditor({
+			_id: likeRefId,
+			targetKey: 'memberLikes',
+			modifier: modifier,
+		});
 
 		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-
 		return result;
 	}
 
