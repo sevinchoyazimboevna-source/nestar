@@ -1,7 +1,7 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { InputType, Field, Int } from '@nestjs/graphql';
 import { IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
-import { availableAgentSorts, availableMemberSorts } from '../../config';
+import { availabeAgentSorts, availableMemberSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
 @InputType()
@@ -9,16 +9,16 @@ export class MemberInput {
 	@IsNotEmpty()
 	@Length(3, 12)
 	@Field(() => String)
-	memberNick!: string;
+	memberNick: string;
 
 	@IsNotEmpty()
 	@Length(5, 12)
 	@Field(() => String)
-	memberPassword!: string;
+	memberPassword: string;
 
 	@IsNotEmpty()
 	@Field(() => String)
-	memberPhone!: string;
+	memberPhone: string;
 
 	@IsOptional()
 	@Field(() => MemberType, { nullable: true })
@@ -34,13 +34,14 @@ export class LoginInput {
 	@IsNotEmpty()
 	@Length(3, 12)
 	@Field(() => String)
-	memberNick!: string;
+	memberNick: string;
 
 	@IsNotEmpty()
 	@Length(5, 12)
 	@Field(() => String)
-	memberPassword!: string;
+	memberPassword: string;
 }
+
 @InputType()
 class AISearch {
 	@IsOptional()
@@ -53,15 +54,15 @@ export class AgentsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
-	page!: number;
+	page: number;
 
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
-	limit!: number;
+	limit: number;
 
 	@IsOptional()
-	@IsIn([availableAgentSorts]) // arrayda bor bolganlarni
+	@IsIn([availabeAgentSorts])
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -71,8 +72,10 @@ export class AgentsInquiry {
 
 	@IsNotEmpty()
 	@Field(() => AISearch)
-	search!: AISearch;
+	search: AISearch;
 }
+
+/** ADMIN */
 
 @InputType()
 class MISearch {
@@ -94,15 +97,15 @@ export class MembersInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
-	page!: number;
+	page: number;
 
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
-	limit!: number;
+	limit: number;
 
 	@IsOptional()
-	@IsIn([availableMemberSorts]) // arrayda bor bolganlarni
+	@IsIn([availableMemberSorts])
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -112,5 +115,5 @@ export class MembersInquiry {
 
 	@IsNotEmpty()
 	@Field(() => MISearch)
-	search!: MISearch;
+	search: MISearch;
 }

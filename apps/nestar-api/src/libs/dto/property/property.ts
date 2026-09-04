@@ -3,7 +3,8 @@ import type { ObjectId } from 'mongoose';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
 import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
 import { Member, TotalCounter } from '../member/member';
-import { MeLiked } from 'c:/Users/user/Desktop/nestar/apps/nestar-api/src/libs/dto/like/like';
+import { MeLiked } from '../like/like';
+
 
 @ObjectType()
 export class Property {
