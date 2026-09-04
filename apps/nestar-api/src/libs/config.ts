@@ -62,19 +62,19 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 	};
 };
 
-interface LookupAuthMemberFollowed {
-	followerId: T;
-	followingId: string;
+interface LookupAuthMemberFollowed { 
+	followerId: T; //auth member id
+	followingId: string; //following member id
 }
-export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
-	const { followerId, followingId } = input;
+export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => { 
+	const { followerId, followingId } = input; //destruction qilinadi
 	return {
 		$lookup: {
 			from: 'follows',
 			let: {
-				localFollowerId: followerId,
-				localFollowingId: followingId,
-				localMyFollowing: true,
+				localFollowerId: followerId, //auth member id
+				localFollowingId: followingId, //following member id
+				localMyFollowing: true, //agar following qilgan bolsa true boladi
 			},
 			pipeline: [
 				{
@@ -100,10 +100,10 @@ export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
 
 export const lookupMember = {
 	$lookup: {
-		from: 'members',
-		localField: 'memberId',
-		foreignField: '_id',
-		as: 'memberData',
+		from: 'members', //collection name
+		localField: 'memberId',  
+		foreignField: '_id',//member collectiondagi id bilan solishtiradi
+		as: 'memberData', //member data ni array ichida beradi
 	},
 };
 
@@ -111,7 +111,7 @@ export const lookupFollowingData = {
 	$lookup: {
 		from: 'members',
 		localField: 'followingId',
-		foreignField: '_id',
+		foreignField: '_id', 
 		as: 'followingData',
 	},
 };
