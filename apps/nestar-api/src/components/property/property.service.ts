@@ -4,6 +4,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import {
 	AgentPropertiesInquiry,
 	AllPropertiesInquiry,
+	OrdinaryInquiry,
 	PropertiesInquiry,
 	PropertyInput,
 } from '../../libs/dto/property/property.input';
@@ -167,9 +168,9 @@ export class PropertyService {
 		} = input.search;
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-		if (locationList) match.propertyLocation = { $in: locationList };
-		if (roomsList) match.propertyRooms = { $in: roomsList };
-		if (bedsList) match.propertyBeds = { $in: bedsList };
+		if (locationList) match.propertyLocation = { $in: locationList }; 
+		if (roomsList) match.propertyRooms = { $in: roomsList }; 
+		if (bedsList) match.propertyBeds = { $in: bedsList }; 
 		if (typeList) match.propertyType = { $in: typeList };
 
 		if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
@@ -182,6 +183,14 @@ export class PropertyService {
 				return { [ele]: true };
 			});
 		}
+	}
+
+	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+		return await this.likeService.getFavoriteProperties(memberId, input);
+	}
+
+	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+		return await this.viewService.getVisitedProperties(memberId, input);
 	}
 
 	public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
