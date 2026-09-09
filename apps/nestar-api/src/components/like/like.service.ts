@@ -34,39 +34,39 @@ export class LikeService {
 		return modifier;
 	}
 
-	public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {
-		const { memberId, likeRefId } = input;
+	public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> { 
+		const { memberId, likeRefId } = input; 
 		const result = await this.likeModel.findOne({ memberId: memberId, likeRefId: likeRefId }).exec();
 
 		return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true }] : [];
 	}
 
 	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
-		const { page, limit } = input;
-		const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId };
+		const { page, limit } = input; 
+		const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId }; //filter likes by member id and like group member id like bosgan odamniki
 
 		const data: T = await this.likeModel
-			.aggregate([
-				{ $match: match },
-				{ $sort: { updatedAt: -1 } },
+			.aggregate([ 
+				{ $match: match }, 
+				{ $sort: { updatedAt: -1 } }, 
 				{
 					$lookup: {
-						from: 'properties',
+						from: 'properties', 
 						localField: 'likeRefId',
 						foreignField: '_id',
-						as: 'favoriteProperty',
+						as: 'favoriteProperty', //array nomi
 					},
 				},
-				{ $unwind: '$favoriteProperty' }, 
+				{ $unwind: '$favoriteProperty' }, //arrayni ochib bir obyektga aylantiradi
 				{
 					$facet: {
-						list: [
+						list: [ 
 							{ $skip: (page - 1) * limit },
-							{ $limit: limit },
-							lookupFavorite,
+							{ $limit: limit }, 
+							lookupFavorite, 
 							{
 								$unwind: {
-									path: '$favoriteProperty.memberData',
+									path: '$favoriteProperty.memberData', 
 								},
 							},
 						],
@@ -76,7 +76,7 @@ export class LikeService {
 			])
 			.exec();
 
-		const result: Properties = { list: [], metaCounter: data[0].metaCounter };
+		const result: Properties = { list: [], metaCounter: data[0].metaCounter }; 
 		result.list = data[0].list.map((ele) => ele.favoriteProperty);
 		console.log('result:', result);
 		return result;

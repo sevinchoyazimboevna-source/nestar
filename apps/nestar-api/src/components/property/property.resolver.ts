@@ -85,8 +85,8 @@ export class PropertyResolver {
 	@UseGuards(AuthGuard)
 	@Query((returns) => Properties)
 	public async getFavorites(
-		@Args('input') input: OrdinaryInquiry,
-		@AuthMember('_id') memberId: ObjectId,
+		@Args('input') input: OrdinaryInquiry, //this is for pagination not  for filtering
+		@AuthMember('_id') memberId: ObjectId, //
 	): Promise<Properties> {
 		console.log('Query: getFavorites');
 		return await this.propertyService.getFavorites(memberId, input);
@@ -96,7 +96,7 @@ export class PropertyResolver {
 	@Query((returns) => Properties)
 	public async getVisited(
 		@Args('input') input: OrdinaryInquiry,
-		@AuthMember('_id') memberId: ObjectId,
+		@AuthMember('_id') memberId: ObjectId, //visite qilgan member larni id si 
 	): Promise<Properties> {
 		console.log('Query: getVisited');
 		return await this.propertyService.getVisited(memberId, input);

@@ -39,7 +39,7 @@ export class ViewService {
 					$lookup: {
 						from: 'properties',
 						localField: 'viewRefId',
-						foreignField: '_id',
+						foreignField: '_id', 
 						as: 'visitedProperty',
 					},
 				},
