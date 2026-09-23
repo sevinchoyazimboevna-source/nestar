@@ -8,7 +8,6 @@ import { MeLiked } from '../like/like';
 
 @ObjectType()
 export class Property {
-	
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -65,6 +64,9 @@ export class Property {
 
 	@Field(() => String)
 	memberId: ObjectId;
+
+	@Field(() => Member, { nullable: true })
+	memberData?: Member;
 
 	@Field(() => Date, { nullable: true })
 	soldAt?: Date;

@@ -122,11 +122,18 @@ export class PropertyService {
 	}
 
 	public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
-		const match: T = { propertyStatus: PropertyStatus.ACTIVE };
-		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+		const match: T = {
+			propertyStatus: PropertyStatus.ACTIVE,
+		};
+
+		const sort: T = {
+			[input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC,
+		};
 
 		this.shapeMatchQuery(match, input);
+
 		console.log('match:', match);
+		console.log('sort:', sort);
 
 		const result = await this.propertyModel
 			.aggregate([
@@ -148,7 +155,9 @@ export class PropertyService {
 			])
 			.exec();
 
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		if (!result.length) {
+			throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		}
 
 		return result[0];
 	}
@@ -168,10 +177,10 @@ export class PropertyService {
 		} = input.search;
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-		if (locationList) match.propertyLocation = { $in: locationList }; 
-		if (roomsList) match.propertyRooms = { $in: roomsList }; 
-		if (bedsList) match.propertyBeds = { $in: bedsList }; 
-		if (typeList) match.propertyType = { $in: typeList };
+		if (locationList && locationList.length) match.propertyLocation = { $in: locationList };
+		if (roomsList && roomsList.length) match.propertyRooms = { $in: roomsList };
+		if (bedsList && bedsList.length) match.propertyBeds = { $in: bedsList };
+		if (typeList && typeList.length) match.propertyType = { $in: typeList };
 
 		if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
 		if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
@@ -185,11 +194,12 @@ export class PropertyService {
 		}
 	}
 
-	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> { //bu methodni ichida likeservice ni ichidan shuni oladi 
+	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+		//bu methodni ichida likeservice ni ichidan shuni oladi
 		return await this.likeService.getFavoriteProperties(memberId, input);
 	}
 
-	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> { 
+	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
 		return await this.viewService.getVisitedProperties(memberId, input);
 	}
 

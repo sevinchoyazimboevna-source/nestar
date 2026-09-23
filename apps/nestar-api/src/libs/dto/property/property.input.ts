@@ -6,7 +6,7 @@ import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/prop
 import type { ObjectId } from 'mongoose';
 
 const availableOptions = ['option1', 'option2', 'option3'];
-const availablePropertySorts = ['price', 'date', 'title'];
+const availablePropertySorts = ['price', 'date', 'title', 'createdAt'];
 
 @InputType()
 export class PropertyInput {
